@@ -13,7 +13,7 @@ public class TagsStyleFlowLayout: ContentDynamicLayout {
         guard let contentCollectionView = collectionView, delegate != nil else {
             return
         }
-        
+
         contentSize.width = contentCollectionView.frame.size.width
 
         let leftPadding = 0 + contentPadding.horizontal
@@ -24,44 +24,56 @@ public class TagsStyleFlowLayout: ContentDynamicLayout {
         var topMargin: CGFloat = contentPadding.vertical
 
         let sectionsCount = contentCollectionView.numberOfSections
-        
+
         for section in 0..<sectionsCount {
+            let headerAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, with: IndexPath(item: 0, section: section))
+            headerAttributes.frame.size.width = contentCollectionView.frame.size.width
+            headerAttributes.frame.size.height = footerReferenceSize.height
+            headerAttributes.frame.origin.y = contentSize.height
+            contentSize.height += headerReferenceSize.height
+            addCachedLayoutAttributes(attributes: headerAttributes)
             for item in 0 ..< contentCollectionView.numberOfItems(inSection: section) {
                 let indexPath = IndexPath(item: item, section: section)
                 let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
-                
+
                 attributes.frame.size = delegate!.cellSize(indexPath: indexPath)
-                
+
                 let currentCellWidth = attributes.frame.size.width
                 let currentCellHeight = attributes.frame.size.height
-                
+
                 if contentAlign == .left {
                     if leftMargin + currentCellWidth + cellsPadding.vertical > contentCollectionView.frame.size.width {
                         leftMargin = contentPadding.horizontal
                         topMargin += attributes.frame.size.height + cellsPadding.vertical
                     }
-                    
+
                     attributes.frame.origin.x = leftMargin
                     attributes.frame.origin.y = topMargin
-                    
+
                     leftMargin += currentCellWidth + cellsPadding.horizontal
-                    
+
                 } else if contentAlign == .right {
                     if leftMargin - currentCellWidth - cellsPadding.horizontal < 0 {
                         leftMargin = contentCollectionView.frame.size.width - contentPadding.horizontal
                         topMargin += attributes.frame.size.height + cellsPadding.vertical
                     }
-                    
+
                     attributes.frame.origin.x = leftMargin - currentCellWidth
                     attributes.frame.origin.y = topMargin
-                    
+
                     leftMargin -= currentCellWidth + cellsPadding.horizontal
                 }
-                
+
                 addCachedLayoutAttributes(attributes: attributes)
-                
+
                 contentSize.height = topMargin + currentCellHeight + contentPadding.vertical
             }
+            let footerAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, with: IndexPath(item: 0, section: section))
+            footerAttributes.frame.size.width = contentCollectionView.frame.size.width
+            footerAttributes.frame.size.height = footerReferenceSize.height
+            footerAttributes.frame.origin.y = contentSize.height
+            contentSize.height += footerReferenceSize.height
+            addCachedLayoutAttributes(attributes: footerAttributes)
         }
     }
 }
