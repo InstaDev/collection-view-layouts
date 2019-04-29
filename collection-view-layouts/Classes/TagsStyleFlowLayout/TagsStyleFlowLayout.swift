@@ -26,12 +26,6 @@ public class TagsStyleFlowLayout: ContentDynamicLayout {
         let sectionsCount = contentCollectionView.numberOfSections
 
         for section in 0..<sectionsCount {
-            let headerAttributes = UICollectionViewLayoutAttributes(forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, with: IndexPath(item: 0, section: section))
-            headerAttributes.frame.size.width = contentCollectionView.frame.size.width
-            headerAttributes.frame.size.height = footerReferenceSize.height
-            headerAttributes.frame.origin.y = contentSize.height
-            contentSize.height += headerReferenceSize.height
-            addCachedLayoutAttributes(attributes: headerAttributes)
             for item in 0 ..< contentCollectionView.numberOfItems(inSection: section) {
                 let indexPath = IndexPath(item: item, section: section)
                 let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
